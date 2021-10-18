@@ -28,8 +28,11 @@
   const initActions = function(){
     const container = document.querySelector(select.bookList.container);
     const form = document.querySelector('.filters form');
+    container.addEventListener('click', function(event){
+      event.preventDefault();
+    });
     container.addEventListener('dblclick', function(event){
-      event.preventDefault;
+      event.preventDefault();
       const clickedElementParent = event.target.offsetParent;
       if(clickedElementParent.classList.contains('book__image')){
         const coverId = clickedElementParent.getAttribute('data-id');
@@ -62,23 +65,30 @@
           filters.splice(index, 1);
           console.log('filters', filters);
         }
-        filterList();
+        filterBooks();
 
       }
     });
-    const filterList = function(){
+    const filterBooks = function(){
       const bookList = dataSource.books;
       const covers = document.querySelectorAll(select.bookList.cover);
       console.log('covers', covers);
       console.log('bookList', bookList);
-      for(let book of bookList){
-        if(filters.includes('nonFiction') && !book.details.nonFiction){
-          const bookId = book.id;
-          console.log('bookId', bookId);
-          // const hiddenElement =
-          // console.log('hiddenElement', hiddenElement);
-        }
-      }
+      // for(let book of bookList){
+      //   if(filters.includes('nonFiction') && !book.details.nonFiction){
+      //     const bookId = book.id;
+      //     console.log('bookId', bookId);
+      //     // const hiddenElement =
+      //     // console.log('hiddenElement', hiddenElement);
+      //   }
+      // }
+      dataSource.books.forEach(book => {
+        const filteredBook = document.querySelector(`.book [data-id="${book.id}"]`);
+        const shouldBookBeHidden = filters.some(filter => !book.details[filter]);
+        filteredBook && shouldBookBeHidden
+          ? filteredBook.classList.add(`hidden`)
+          : filteredBook.classList.remove(`hidden`);
+      });
     };
   };
 
