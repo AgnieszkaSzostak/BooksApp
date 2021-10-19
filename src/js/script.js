@@ -3,6 +3,7 @@
 
   const templates = {
     bookList: Handlebars.compile(document.querySelector('#template-book').innerHTML),
+
   };
 
   const select = {
@@ -15,6 +16,10 @@
 
   const renderBooks = function(){
     for(let book of dataSource.books) {
+      const ratingBgc = determineRatingBgc(book.rating);
+      const ratingWidth = book.rating * 10;
+      book['ratingBgc'] = ratingBgc;
+      book['ratingWidth'] = ratingWidth;
       const generatedHTML = templates.bookList(book);
       select.bookList.item = utils.createDOMFromHTML(generatedHTML);
       const bookListContainer = document.querySelector(select.bookList.container);
@@ -70,18 +75,6 @@
       }
     });
     const filterBooks = function(){
-      const bookList = dataSource.books;
-      const covers = document.querySelectorAll(select.bookList.cover);
-      console.log('covers', covers);
-      console.log('bookList', bookList);
-      // for(let book of bookList){
-      //   if(filters.includes('nonFiction') && !book.details.nonFiction){
-      //     const bookId = book.id;
-      //     console.log('bookId', bookId);
-      //     // const hiddenElement =
-      //     // console.log('hiddenElement', hiddenElement);
-      //   }
-      // }
       dataSource.books.forEach(book => {
         const filteredBook = document.querySelector(`.book [data-id="${book.id}"]`);
         const shouldBookBeHidden = filters.some(filter => !book.details[filter]);
@@ -90,6 +83,22 @@
           : filteredBook.classList.remove(`hidden`);
       });
     };
+  };
+
+  const determineRatingBgc = function(rating){
+    if (rating < 6){
+      return `linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%);`;
+    }
+    if (rating > 6 && rating <= 8){
+      return `linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%);`;
+    }
+    if (rating > 8 && rating <= 9){
+      return `linear-gradient(to bottom, #299a0b 0%, #299a0b 100%);`;
+    }
+    if (rating > 9){
+      return `linear-gradient(to bottom, #ff0084 0%,#ff0084 100%);`;
+    }
+
   };
 
 
