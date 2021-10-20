@@ -40,7 +40,6 @@
       thisBookList.dom.form = document.querySelector(select.bookList.form);
       thisBookList.data.books = dataSource.books;
     }
-
     renderBooks(){
       const thisBookList = this;
 
@@ -80,9 +79,7 @@
           : filteredBook.classList.remove(`hidden`);
       }
     }
-
     initActions(){
-
       const thisBookList = this;
 
       thisBookList.dom.bookListContainer.addEventListener('click', function(event){
