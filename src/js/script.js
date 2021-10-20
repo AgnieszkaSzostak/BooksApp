@@ -109,19 +109,15 @@
       thisBookList.dom.form.addEventListener('click', function(event){
         event.preventDefault;
         const clickedElement = event.target;
-        console.log('event.target/form:', event.target);
         if(clickedElement.name == 'filter' &&
           clickedElement.type == 'checkbox' &&
           clickedElement.tagName == 'INPUT' ){
-          console.log('clickedElement.value:', clickedElement.value);
           if(clickedElement.checked){
             thisBookList.filters.push(clickedElement.value);
-            console.log('filters', thisBookList.filters);
           }
           else{
             const index = thisBookList.filters.indexOf(clickedElement.value);
             thisBookList.filters.splice(index, 1);
-            console.log('filters', thisBookList.filters);
           }
           thisBookList.filterBooks();
         }
