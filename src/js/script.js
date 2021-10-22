@@ -16,6 +16,7 @@
     }
   };
 
+
   class BookList {
     constructor(){
       const thisBookList = this;
@@ -28,17 +29,15 @@
       const thisBookList = this;
 
       thisBookList.data = dataSource;
-      thisBookList.data.books = dataSource.books;
+      thisBookList.favoriteBooks = [];
+      thisBookList.filters = [];
     }
     getElements(){
       const thisBookList = this;
 
       thisBookList.dom = {};
       thisBookList.dom.bookListContainer = document.querySelector(select.bookList.container);
-      thisBookList.favoriteBooks = [];
-      thisBookList.filters = [];
       thisBookList.dom.form = document.querySelector(select.bookList.form);
-      thisBookList.data.books = dataSource.books;
     }
     renderBooks(){
       const thisBookList = this;
@@ -46,15 +45,16 @@
       for(let book of thisBookList.data.books) {
         const ratingBgc = thisBookList.determineRatingBgc(book.rating);
         const ratingWidth = book.rating * 10;
-        book['ratingBgc'] = ratingBgc;
-        book['ratingWidth'] = ratingWidth;
+        book.ratingBgc = ratingBgc;
+        book.ratingWidth = ratingWidth;
         const generatedHTML = templates.bookList(book);
-        select.bookList.item = utils.createDOMFromHTML(generatedHTML);
-        thisBookList.dom.bookListContainer.appendChild(select.bookList.item);
+        const preparedHTML = utils.createDOMFromHTML(generatedHTML);
+        thisBookList.dom.bookListContainer.appendChild(preparedHTML);
       }
       thisBookList.filterBooks();
     }
     determineRatingBgc(rating){
+
       if (rating < 6){
         return `linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%);`;
       }
@@ -72,11 +72,11 @@
       const thisBookList = this;
 
       for (let book of thisBookList.data.books){
-        const filteredBook = document.querySelector(`.book [data-id="${book.id}"]`);
-        const shouldBookBeHidden = thisBookList.filters.some(filter => !book.details[filter]);
-        filteredBook && shouldBookBeHidden
-          ? filteredBook.classList.add(`hidden`)
-          : filteredBook.classList.remove(`hidden`);
+        const bookImage = document.querySelector(`.book [data-id="${book.id}"]`);
+        const shouldBookBeHidden = thisBookList.filters.some(filter => book.details[filter]);
+        bookImage && shouldBookBeHidden
+          ? bookImage.classList.add(`hidden`)
+          : bookImage.classList.remove(`hidden`);
       }
     }
     initActions(){
@@ -104,7 +104,6 @@
       });
 
       thisBookList.dom.form.addEventListener('click', function(event){
-        event.preventDefault;
         const clickedElement = event.target;
         if(clickedElement.name == 'filter' &&
           clickedElement.type == 'checkbox' &&
